@@ -22,7 +22,7 @@ function getMiddleware(config, reliableGet, eventHandler, optionsTransformer) {
     var templateVars = req.templateVars;
     var fragmentTimings = [];
 
-    function getCx(fragment, next) {
+    function getCx(fragment, next, state) {
 
       /*jslint evil: true */
       var options,
@@ -64,6 +64,10 @@ function getMiddleware(config, reliableGet, eventHandler, optionsTransformer) {
         headers: optionsHeaders,
         tracer: req.tracer,
         statsdKey: statsdKey
+      }
+
+      if (state) {
+          state.allowTimeout(options.timeout);
       }
 
       var setResponseHeaders = function (headers) {
