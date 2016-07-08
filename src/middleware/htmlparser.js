@@ -180,7 +180,9 @@ function getMiddleware(config, reliableGet, eventHandler, optionsTransformer) {
           var content;
           if (err) {
             content = onErrorHandler(err, response, transformedOptions);
-            responseCallback(null, content);
+            if ('string' === typeof content) {
+                responseCallback(null, content);
+            }
           } else {
             fragmentTimings.push({ url: options.url, status: response.statusCode, timing: response.timing });
             content = isDebugEnabled() ? delimitContent(response, options) : response.content;
