@@ -179,11 +179,13 @@ function getMiddleware(config, reliableGet, eventHandler, optionsTransformer) {
         reliableGet.get(transformedOptions, function (err, response) {
           var content;
           if (err) {
-            return onErrorHandler(err, response, transformedOptions);
+            content = onErrorHandler(err, response, transformedOptions);
+            responseCallback(null, content);
+          } else {
+            fragmentTimings.push({ url: options.url, status: response.statusCode, timing: response.timing });
+            content = isDebugEnabled() ? delimitContent(response, options) : response.content;
+            responseCallback(null, content, response.headers);
           }
-          fragmentTimings.push({ url: options.url, status: response.statusCode, timing: response.timing });
-          content = isDebugEnabled() ? delimitContent(response, options) : response.content;
-          responseCallback(null, content, response.headers);
         });
       });
 
